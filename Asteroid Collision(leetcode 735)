@@ -1,0 +1,44 @@
+//-------------------------------------------------------------Approch--------------------------------------------------------------//
+
+We use a stack to keep track of safe asteroids and simulate real collisions.
+The while loop ensures that one asteroid can fight multiple asteroids until no collision is possible.
+
+##   Complexity
+Time: O(n) → each asteroid processed once
+Space: O(n) → stack used
+
+//-----------------------------------------------------------------Code-----------------------------------------------------------------//
+class Solution {
+    public int[] asteroidCollision(int[] asteroids) {
+        int n = asteroids.length;
+
+        Stack<Integer> st = new Stack<>();
+        st.push(asteroids[0]);
+
+        for(int i = 1; i < n; i++){
+            boolean destroyed = false;
+
+            while(!st.isEmpty() && st.peek() > 0 && asteroids[i] < 0){
+                int asteroid = st.pop();
+
+                if(Math.abs(asteroids[i]) < Math.abs(asteroid)){
+                    st.push(asteroid);
+                    destroyed = true;
+                    break;
+                }
+                else if(Math.abs(asteroids[i]) == Math.abs(asteroid)){
+                    destroyed = true;
+                    break;
+                }
+            }
+            if(!destroyed){
+                st.push(asteroids[i]);
+            }
+        }
+        int[] res = new int[st.size()];
+        for(int i = res.length - 1; i >= 0; i--){
+            res[i] = st.pop();
+        }
+        return res;
+    }
+}
