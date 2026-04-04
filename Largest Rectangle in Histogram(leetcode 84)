@@ -1,0 +1,54 @@
+//------------------------------------------------------------Approch---------------------------------------------------------------//
+
+For each bar, expand left and right until a smaller bar blocks you, compute width using those boundaries, and take the maximum area
+
+##  Complexity
+Time Complexity: O(n)
+Space Complexity: O(n)
+
+//---------------------------------------------------------------Code----------------------------------------------------------------------//
+
+class Solution {
+    public int largestRectangleArea(int[] heights) {
+        int n = heights.length;
+        int maxArea = 0;
+        int[] leftNearestSmaller = new int[n];
+        int[] rightNearestSmaller = new int[n];
+
+        Stack<Integer> st = new Stack<>();
+
+        for (int i = 0; i < n; i++) {
+            while (st.isEmpty() == false && heights[st.peek()] >= heights[i]) {
+                st.pop();
+            }
+
+            if (st.isEmpty()) {
+                leftNearestSmaller[i] = -1;
+            } else {
+                leftNearestSmaller[i] = st.peek();
+            }
+
+            st.push(i);
+        }
+
+        st.clear();
+
+        for (int i = n - 1; i >= 0; i--) {
+            while (st.isEmpty() == false && heights[st.peek()] >= heights[i]) {
+                st.pop();
+            }
+            if (st.isEmpty()) {
+                rightNearestSmaller[i] = n;
+            } else {
+                rightNearestSmaller[i] = st.peek();
+            }
+            st.push(i);
+        }
+        for (int i = 0; i < n; i++) {
+            int width = rightNearestSmaller[i] - leftNearestSmaller[i] - 1;
+            maxArea = Math.max(maxArea, heights[i] * width);
+        }
+
+        return maxArea;
+    }
+}
